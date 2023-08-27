@@ -1,16 +1,20 @@
-"use strict";
-const canvas = document.getElementById("simulation");
+const canvas = <HTMLCanvasElement>document.getElementById("simulation");
 const ctx = canvas.getContext("2d");
+
 function generateUUID() {
     let d = new Date().getTime();
-    const uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-        const r = (d + Math.random() * 16) % 16 | 0;
-        d = Math.floor(d / 16);
-        return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
-    });
+    const uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+        /[xy]/g,
+        function (c) {
+            const r = (d + Math.random() * 16) % 16 | 0;
+            d = Math.floor(d / 16);
+            return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+        }
+    );
     return uuid;
 }
-function randomSort(array) {
+
+function randomSort(array: any[]) {
     for (let i = array.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * i);
         let k = array[i];
@@ -19,6 +23,7 @@ function randomSort(array) {
     }
     return array;
 }
+
 // function uuidv4() {
 //     return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
 //         (
@@ -27,11 +32,12 @@ function randomSort(array) {
 //         ).toString(16)
 //     );
 // }
+
 class Species {
-    males = [];
-    females = [];
-    color;
-    constructor(color) {
+    private males: any[] = [];
+    private females: any[] = [];
+    private color: string;
+    constructor(color: string) {
         this.color = color;
         while (true) {
             let male = new Personagem(this.color);
@@ -44,14 +50,18 @@ class Species {
             const minutes = now.getMinutes();
             const seconds = now.getSeconds();
             const mili = now.getMilliseconds();
-            console.log("Impresso @ generate:", hours +
-                ":" +
-                minutes +
-                ":" +
-                seconds +
-                ":" +
-                mili +
-                ", machos:", this.males);
+            console.log(
+                "Impresso @ generate:",
+                hours +
+                    ":" +
+                    minutes +
+                    ":" +
+                    seconds +
+                    ":" +
+                    mili +
+                    ", machos:",
+                this.males
+            );
             break;
         }
         while (true) {
@@ -65,14 +75,18 @@ class Species {
             const minutes = now.getMinutes();
             const seconds = now.getSeconds();
             const mili = now.getMilliseconds();
-            console.log("Impresso @ generate:", hours +
-                ":" +
-                minutes +
-                ":" +
-                seconds +
-                ":" +
-                mili +
-                ", femeas:", this.females);
+            console.log(
+                "Impresso @ generate:",
+                hours +
+                    ":" +
+                    minutes +
+                    ":" +
+                    seconds +
+                    ":" +
+                    mili +
+                    ", femeas:",
+                this.females
+            );
             break;
         }
         //this.generate();
@@ -87,8 +101,7 @@ class Species {
         }
         if (child.sex == true) {
             this.females.push(child);
-        }
-        else {
+        } else {
             this.males.push(child);
         }
     }
@@ -107,8 +120,7 @@ class Species {
         }
         if (child.sex == true) {
             this.females.push(child);
-        }
-        else {
+        } else {
             this.males.push(child);
         }
     }
@@ -119,13 +131,18 @@ class Species {
             return;
             // male = new Personagem(this.color);
         }
+
         this.males.push(male);
         let now = new Date();
         let hours = now.getHours();
         let minutes = now.getMinutes();
         let seconds = now.getSeconds();
         let mili = now.getMilliseconds();
-        console.log("Impresso @ generate:", hours + ":" + minutes + ":" + seconds + ":" + mili + ", machos:", this.males);
+        console.log(
+            "Impresso @ generate:",
+            hours + ":" + minutes + ":" + seconds + ":" + mili + ", machos:",
+            this.males
+        );
         let female = new Personagem(this.color);
         while (female.sex == false) {
             female = new Personagem(this.color);
@@ -136,7 +153,11 @@ class Species {
         minutes = now.getMinutes();
         seconds = now.getSeconds();
         mili = now.getMilliseconds();
-        console.log("Impresso @ generate:", hours + ":" + minutes + ":" + seconds + ":" + mili + ", femeas:", this.females);
+        console.log(
+            "Impresso @ generate:",
+            hours + ":" + minutes + ":" + seconds + ":" + mili + ", femeas:",
+            this.females
+        );
     }
     age() {
         let numberdraw = 0;
@@ -170,19 +191,15 @@ class Species {
         this.males = randomSort(this.males);
         this.females = randomSort(this.females);
         let length = this.males.length >= 2 ? this.males.length / 2 : 1;
-        if (length > 1)
-            length = length % 2 === 0 ? length : length - 1;
+        if (length > 1) length = length % 2 === 0 ? length : length - 1;
         for (let i = 0; i < length; i++) {
-            if (!this.males[i])
-                continue;
+            if (!this.males[i]) continue;
             if (this.females[i]) {
                 let child = this.males[i].createChild(this.females[i]);
-                if (child == null)
-                    continue;
+                if (child == null) continue;
                 if (child.sex == true) {
                     this.females.push(child);
-                }
-                else {
+                } else {
                     this.males.push(child);
                 }
             }
@@ -193,8 +210,7 @@ class Species {
     }
     analyze() {
         let population = this.males.concat(this.females);
-        if (population.length < 1)
-            return;
+        if (population.length < 1) return;
         let genes = [0, 0, 0, 0, 0, 0, 0, 0, 0];
         let maxNumber = 0;
         let common = null;
@@ -219,25 +235,27 @@ class Species {
         };
     }
 }
+
 class Personagem {
-    isDead = false;
-    id = generateUUID();
-    color;
-    x;
-    y;
-    vegetarian = null;
-    procriate = null; // Boolean
-    sex = null; // Boolean
-    canibal = false; // Boolean
-    necessity = 10; // Número float randômico
-    procriate_rate = 1;
-    death_rate = 1; // Número float randômico
-    lifetime = Math.floor(Math.random() * 60 + 40); // Número int randômico
-    age = 0;
-    food_finding = Math.random() * 2;
-    genes = new Array(8);
-    children = new Array();
-    constructor(color) {
+    private isDead: boolean = false;
+    private id = generateUUID();
+    private color: string;
+    private x: number;
+    private y: number;
+    private vegetarian: boolean | null = null;
+    private procriate: boolean | null = null; // Boolean
+    public sex: boolean | null = null; // Boolean
+    private canibal: boolean = false; // Boolean
+    private necessity = 10; // Número float randômico
+    private procriate_rate = 1;
+    private death_rate = 1; // Número float randômico
+    private lifetime = Math.floor(Math.random() * 60 + 40); // Número int randômico
+    private age: number = 0;
+    private food_finding = Math.random() * 2;
+    private genes = new Array(8);
+    private children = new Array();
+
+    constructor(color: string) {
         let now = new Date();
         let hours = now.getHours();
         let minutes = now.getMinutes();
@@ -255,8 +273,7 @@ class Personagem {
         for (let i = 0; i < this.genes.length; i++) {
             let random = Math.floor(Math.random() * 9);
             //if (i == 1) random = Math.floor(Math.random() * 6);
-            if (i == 0 || i == 2)
-                random = Math.floor(Math.random() * 2);
+            if (i == 0 || i == 2) random = Math.floor(Math.random() * 2);
             this.genes[i] = random;
         }
         this.process();
@@ -280,8 +297,7 @@ class Personagem {
         // );
     }
     draw() {
-        if (ctx == null)
-            return;
+        if (ctx == null) return;
         ctx.beginPath();
         ctx.arc(this.x, this.y, 5, 0, 2 * Math.PI);
         ctx.fillStyle = this.color;
@@ -354,15 +370,13 @@ class Personagem {
         }
         //console.log(this.genes);
     }
-    createChild(female) {
-        if (this.sex != false)
-            return;
+    createChild(female: any) {
+        if (this.sex != false) return;
         if (this.procriate == false) {
             console.log("male cant procriate");
             return;
         }
-        if (female.sex == false)
-            return;
+        if (female.sex == false) return;
         if (female.procriate == false) {
             console.log("female cant procriate");
             return;
@@ -374,13 +388,11 @@ class Personagem {
             if (dadOrMom < 0.5) {
                 // console.log("dad won");
                 child.vegetarian = this.vegetarian;
-            }
-            else {
+            } else {
                 // console.log("mom won");
                 child.vegetarian = female.vegetarian;
             }
-        }
-        else {
+        } else {
             child.vegetarian = this.vegetarian;
         }
         child.genes[0] = child.vegetarian ? 0 : 1;
@@ -422,6 +434,7 @@ class Personagem {
         }
     }
 }
+
 let s1 = new Species("black");
 // let s2 = new Species("blue");
 // let s3 = new Species("green");
@@ -438,10 +451,20 @@ for (let i = 0; i <= 70; i++) {
 let toAnalyze = s1.analyze();
 if (toAnalyze == null) {
     console.log("nothing to analyze");
-}
-else {
+} else {
     console.log(toAnalyze?.genes);
-    console.log("O gene mais comum foi o:", toAnalyze?.gene, "com:", toAnalyze?.quantity, "genes, de um total de", toAnalyze?.total, "o que corresponde a", parseFloat(((toAnalyze?.quantity / toAnalyze?.total) * 100).toFixed(2)) + "%");
+    console.log(
+        "O gene mais comum foi o:",
+        toAnalyze?.gene,
+        "com:",
+        toAnalyze?.quantity,
+        "genes, de um total de",
+        toAnalyze?.total,
+        "o que corresponde a",
+        parseFloat(
+            ((toAnalyze?.quantity / toAnalyze?.total) * 100).toFixed(2)
+        ) + "%"
+    );
 }
 // let c1 = document.createTextNode(
 //     "Espécie um tem: " + s1.getPopulation() + " seres, "
@@ -488,11 +511,13 @@ else {
 // console.log(ser.sex ? "female" : "male");
 // console.log(ser.food_finding);
 // console.log(ser);
+
 // for (let i = 0; i < 10; i += 1) {
 //     let p = new Personagem("black");
 //     console.log("p" + i + " chance: " + p.chance);
 //     p.draw();
 // }
+
 // Personagem tem que encontrar comida
 // Personagem tem genes, um array de 8 genes, genes são simbolizados por números
 // Gene[0]: Gene que define se é vegetariano, valores vão de 0 a 9, sendo 0 vegetariano
@@ -508,6 +533,7 @@ else {
 // Tipo de Gene 6 -> Vive menos tempo.
 // Tipo de Gene 7 -> Facilidade para achar comida.
 // Tipo de gene 8 -> Dificuldade de achar comida.
+
 // [0,0,0,1,1,1,1,1]
 // O tipo 0 nesse caso aí, é de que é um espaço reservado para um gene "especial": que define o sexo, se é vegetariano ou se pode procriar
 // O tipo 1 são genes aleatórios, aqueles de canibal, viver mais ou menos tempo e tals.
