@@ -141,12 +141,20 @@ class Species {
     age() {
         let numberdraw = 0;
         for (let i = 0; i < this.males.length; i++) {
+            // if (this.males[i].canibal == true) {
+            //     this.males.splice(-1, 1);
+            //     console.log("killed someone");
+            //     return;
+            // }
+            if (this.males[i] == null) {
+                console.log("everyone died?");
+            }
             this.males[i].next();
             if (this.males[i].isDead) {
-                let id = this.males[i].id;
+                // let id = this.males[i].id;
                 this.males[i] = null;
                 this.males.splice(i, 1);
-                console.log(id, "has died");
+                // console.log(id, "has died");
             }
             if (this.males[i]) {
                 numberdraw += 1;
@@ -156,11 +164,10 @@ class Species {
         for (let i = 0; i < this.females.length; i++) {
             this.females[i].next();
             if (this.females[i].isDead) {
-                console.log("necessidade:", this.females[i].necessity);
-                let id = this.females[i].id;
+                // let id = this.females[i].id;
                 this.females[i] = null;
                 this.females.splice(i, 1);
-                console.log(id, "has died");
+                // console.log(id, "has died");
             }
             if (this.females[i]) {
                 numberdraw += 1;
@@ -219,6 +226,20 @@ class Species {
         };
     }
 }
+function prettyPrint(species) {
+    let toAnalyze = species.analyze();
+    if (toAnalyze === undefined)
+        return "nothing to analyze";
+    return ("O gene mais comum foi o gene do tipo '" +
+        toAnalyze?.gene +
+        "' com: " +
+        toAnalyze?.quantity +
+        " genes, de um total de: " +
+        toAnalyze?.total +
+        ", o que corresponde a: " +
+        parseFloat(((toAnalyze?.quantity / toAnalyze?.total) * 100).toFixed(2)) +
+        "%.");
+}
 class Personagem {
     isDead = false;
     id = generateUUID();
@@ -260,24 +281,6 @@ class Personagem {
             this.genes[i] = random;
         }
         this.process();
-        //console.log(this);
-        // now = new Date();
-        // hours = now.getHours();
-        // minutes = now.getMinutes();
-        // seconds = now.getSeconds();
-        // mili = now.getMilliseconds();
-        // console.log(
-        //     "Foi gerado um agora:",
-        //     hours +
-        //         ":" +
-        //         minutes +
-        //         ":" +
-        //         seconds +
-        //         ":" +
-        //         mili +
-        //         ", id:" +
-        //         this.id
-        // );
     }
     draw() {
         if (ctx == null)
@@ -339,7 +342,7 @@ class Personagem {
                     this.lifetime += this.lifetime * Math.random();
                     break;
                 case 6:
-                    this.lifetime -= this.lifetime * Math.random();
+                    this.lifetime -= this.lifetime * Math.random() * 1.6;
                     break;
                 case 7:
                     this.food_finding += this.food_finding * Math.random();
@@ -358,13 +361,13 @@ class Personagem {
         if (this.sex != false)
             return;
         if (this.procriate == false) {
-            console.log("male cant procriate");
+            // console.log("male cant procriate");
             return;
         }
         if (female.sex == false)
             return;
         if (female.procriate == false) {
-            console.log("female cant procriate");
+            // console.log("female cant procriate");
             return;
         }
         let child = new Personagem(this.color);
@@ -420,79 +423,63 @@ class Personagem {
             this.isDead = true;
             return;
         }
+        if (this.death_rate >= Math.random() * 2 + 1.0) {
+            // console.log("died by death rate");
+            return;
+        }
     }
 }
 let s1 = new Species("black");
-// let s2 = new Species("blue");
-// let s3 = new Species("green");
-// let s4 = new Species("yellow");
-// let s5 = new Species("grey");
-for (let i = 0; i <= 70; i++) {
+let s2 = new Species("blue");
+let s3 = new Species("green");
+let s4 = new Species("yellow");
+let s5 = new Species("grey");
+for (let i = 0; i <= 100; i++) {
     ctx?.clearRect(0, 0, 1100, 650);
     s1.age();
-    // s2.age();
-    // s3.age();
-    // s4.age();
-    // s5.age();
+    s2.age();
+    s3.age();
+    s4.age();
+    s5.age();
 }
-let toAnalyze = s1.analyze();
-if (toAnalyze == null) {
-    console.log("nothing to analyze");
-}
-else {
-    console.log(toAnalyze?.genes);
-    console.log("O gene mais comum foi o:", toAnalyze?.gene, "com:", toAnalyze?.quantity, "genes, de um total de", toAnalyze?.total, "o que corresponde a", parseFloat(((toAnalyze?.quantity / toAnalyze?.total) * 100).toFixed(2)) + "%");
-}
-// let c1 = document.createTextNode(
-//     "Espécie um tem: " + s1.getPopulation() + " seres, "
-// );
-// let c2 = document.createTextNode(
-//     "Espécie dois tem: " + s2.getPopulation() + " seres, "
-// );
-// let c3 = document.createTextNode(
-//     "Espécie três tem: " + s3.getPopulation() + " seres, "
-// );
-// let c4 = document.createTextNode(
-//     "Espécie quatro tem: " + s4.getPopulation() + " seres, "
-// );
-// let c5 = document.createTextNode(
-//     "Espécie cinco tem: " + s5.getPopulation() + " seres."
-// );
-// let ph = document.getElementById("placeholder");
-// ph?.appendChild(c1);
-// ph?.appendChild(c2);
-// ph?.appendChild(c3);
-// ph?.appendChild(c4);
-// ph?.appendChild(c5);
-//s.print();
-//console.log("Hello, World!");
-//let specie = new Species("black");
-// let p = new Personagem("black");
-// p.lifetime = 10;
-// for (let i = 0; i <= 1000000; i++) {
-//     if (p == null) {
-//         break;
-//     }
-//     p.draw();
-//     console.log(p);
-//     p.next();
-//     if (p.isDead) {
-//         p = null;
-//     }
-// }
-// console.log(p);
-// let ser = new Personagem("black");
-// ser.draw();
-// console.log(ser.genes);
-// ser.process();
-// console.log(ser.sex ? "female" : "male");
-// console.log(ser.food_finding);
-// console.log(ser);
-// for (let i = 0; i < 10; i += 1) {
-//     let p = new Personagem("black");
-//     console.log("p" + i + " chance: " + p.chance);
-//     p.draw();
-// }
+let c1 = document.createTextNode("Espécie um tem: " + s1.getPopulation() + " seres, ");
+let c2 = document.createTextNode("Espécie dois tem: " + s2.getPopulation() + " seres, ");
+let c3 = document.createTextNode("Espécie três tem: " + s3.getPopulation() + " seres, ");
+let c4 = document.createTextNode("Espécie quatro tem: " + s4.getPopulation() + " seres, ");
+let c5 = document.createTextNode("Espécie cinco tem: " + s5.getPopulation() + " seres.");
+let ph = document.getElementById("placeholder");
+ph?.appendChild(c1);
+ph?.appendChild(c2);
+ph?.appendChild(c3);
+ph?.appendChild(c4);
+ph?.appendChild(c5);
+let analytics = document.getElementById("analytics");
+console.log(prettyPrint(s1));
+console.log(prettyPrint(s2));
+console.log(prettyPrint(s3));
+console.log(prettyPrint(s4));
+console.log(prettyPrint(s5));
+let a1 = document.createTextNode(prettyPrint(s1));
+let a2 = document.createTextNode(prettyPrint(s2));
+let a3 = document.createTextNode(prettyPrint(s3));
+let a4 = document.createTextNode(prettyPrint(s4));
+let a5 = document.createTextNode(prettyPrint(s5));
+let newline = document.createElement("p");
+newline.innerHTML = "Data:";
+ph?.appendChild(newline);
+ph?.appendChild(a1);
+let n2 = document.createElement("p");
+ph?.appendChild(n2);
+ph?.appendChild(a2);
+let n3 = document.createElement("p");
+ph?.appendChild(n3);
+ph?.appendChild(a3);
+let n4 = document.createElement("p");
+ph?.appendChild(n4);
+ph?.appendChild(a4);
+let n5 = document.createElement("p");
+ph?.appendChild(n5);
+ph?.appendChild(a5);
 // Personagem tem que encontrar comida
 // Personagem tem genes, um array de 8 genes, genes são simbolizados por números
 // Gene[0]: Gene que define se é vegetariano, valores vão de 0 a 9, sendo 0 vegetariano
