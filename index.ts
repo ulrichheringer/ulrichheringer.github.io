@@ -451,7 +451,7 @@ let s2 = new Species("blue");
 let s3 = new Species("green");
 let s4 = new Species("yellow");
 let s5 = new Species("grey");
-for (let i = 0; i <= 100; i++) {
+for (let i = 0; i <= 150; i++) {
     ctx?.clearRect(0, 0, 1100, 650);
     s1.age();
     s2.age();
